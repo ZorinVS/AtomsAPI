@@ -1,0 +1,59 @@
+[
+{
+    "model": "users.user",
+    "pk": 1,
+    "fields": {
+        "password": "pbkdf2_sha256$870000$FgxoDjKzsXry3s6P1CkdfP$f/0FMvhwacbKO4w884RsdaMd0h6CRkhcP9Js1oO+OVY=",
+        "last_login": "2025-02-06T18:18:03.676Z",
+        "is_superuser": true,
+        "first_name": "",
+        "last_name": "",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2025-02-06T18:04:00Z",
+        "email": "james@example.com",
+        "avatar": "users/avatars/JAMES-CLEAR.png",
+        "telegram_id": null,
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "users.user",
+    "pk": 2,
+    "fields": {
+        "password": "pbkdf2_sha256$870000$7IQH5FNhMyDczatYy9mt1l$Ty/nVwxd6uqcplvOray0WHUROJe1JXereQTuNojRLKY=",
+        "last_login": null,
+        "is_superuser": false,
+        "first_name": "",
+        "last_name": "",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2025-02-06T18:18:54.770Z",
+        "email": "user1@example.com",
+        "avatar": "",
+        "telegram_id": null,
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "users.user",
+    "pk": 3,
+    "fields": {
+        "password": "pbkdf2_sha256$870000$tAcHUaWtRmt3e0Mr6QgU70$FK29v/SOn82XalufE65ctuO5MZruikyBTojymLgAnb8=",
+        "last_login": null,
+        "is_superuser": false,
+        "first_name": "",
+        "last_name": "",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2025-02-06T18:19:27.414Z",
+        "email": "user2@example.com",
+        "avatar": "",
+        "telegram_id": null,
+        "groups": [],
+        "user_permissions": []
+    }
+}
+]

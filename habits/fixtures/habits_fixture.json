@@ -1,0 +1,82 @@
+[
+{
+    "model": "habits.habit",
+    "pk": 1,
+    "fields": {
+        "builder": 2,
+        "location": "Дом",
+        "time": "07:10:00",
+        "action": "Растяжка",
+        "is_enjoyable": true,
+        "related_habit": null,
+        "frequency": 1,
+        "reward": null,
+        "time_required": 120,
+        "is_public": true
+    }
+},
+{
+    "model": "habits.habit",
+    "pk": 2,
+    "fields": {
+        "builder": 2,
+        "location": "Дом",
+        "time": "16:00:00",
+        "action": "Приступить к изучению иностранного языка",
+        "is_enjoyable": false,
+        "related_habit": 3,
+        "frequency": 2,
+        "reward": null,
+        "time_required": 120,
+        "is_public": false
+    }
+},
+{
+    "model": "habits.habit",
+    "pk": 3,
+    "fields": {
+        "builder": 2,
+        "location": "Дом",
+        "time": "19:30:00",
+        "action": "Собраться на тренировку",
+        "is_enjoyable": true,
+        "related_habit": null,
+        "frequency": 2,
+        "reward": null,
+        "time_required": 120,
+        "is_public": false
+    }
+},
+{
+    "model": "habits.habit",
+    "pk": 4,
+    "fields": {
+        "builder": 3,
+        "location": "Офис",
+        "time": "09:00:00",
+        "action": "Распланировать рабочий день",
+        "is_enjoyable": false,
+        "related_habit": null,
+        "frequency": 2,
+        "reward": "Чашка кофе",
+        "time_required": 120,
+        "is_public": true
+    }
+},
+{
+    "model": "habits.habit",
+    "pk": 5,
+    "fields": {
+        "builder": 3,
+        "location": "Дом",
+        "time": "19:00:00",
+        "action": "Собраться на вечернюю прогулку",
+        "is_enjoyable": true,
+        "related_habit": null,
+        "frequency": 1,
+        "reward": null,
+        "time_required": 120,
+        "is_public": true
+    }
+}
+]
