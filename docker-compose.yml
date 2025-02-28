@@ -5,8 +5,8 @@ services:
     build: .
     env_file:
       - .env
-    environment:
-      CELERY_BROKER_URL: redis://redis:6379/0
+    command: >
+      sh -c "python manage.py migrate && gunicorn --bind 0.0.0.0:8000 config.wsgi:application"
     depends_on:
       db:
         condition: service_healthy
@@ -34,7 +34,7 @@ services:
     env_file:
       - .env
     environment:
-      POSTGRES_DB: drf_hw
+      POSTGRES_DB: atoms_api
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     healthcheck:
@@ -44,34 +44,20 @@ services:
       retries: 5
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    expose:
-      - "5432"
     networks:
       - my_network
   redis:
     image: redis:7.4.2
-    env_file:
-      - .env
-    command: redis-server
-    expose:
-      - "6379"
     networks:
       - my_network
   celery:
     build: .
     env_file:
       - .env
-    environment:
-      - CELERY_BROKER_URL=redis://redis:6379/0
     command: celery -A config worker -l INFO
     depends_on:
       - redis
       - db
-    healthcheck:
-      test: [ "CMD-SHELL", "celery -A config status" ]
-      interval: 30s
-      timeout: 10s
-      retries: 5
     networks:
       - my_network
   celery_beat:
@@ -79,10 +65,9 @@ services:
     env_file:
       - .env
     command: >
-      bash -c "celery -A config beat -l info -S django"
+      sh -c "celery -A config beat -l info -S django"
     depends_on:
-      celery:
-        condition: service_healthy
+      - redis
     networks:
       - my_network
 volumes:
