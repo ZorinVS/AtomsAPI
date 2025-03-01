@@ -206,7 +206,7 @@ TELEGRAM_URL = 'https://api.telegram.org/bot'
 TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN')
 
 # Для тестов используется SQLite
-if 'test' in sys.argv:
+if 'test' in sys.argv or os.environ.get('GITHUB_ACTIONS') == 'true':
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
