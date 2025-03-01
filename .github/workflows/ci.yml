@@ -47,3 +47,46 @@ jobs:
 
       - name: Run tests
         run: python manage.py test
+
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Log in in Docker hub
+        run: echo ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }} | docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} --password-stdin
+
+      - name: Build and push App Docker image
+        run: |
+          docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/atoms_api_app:${{ github.sha }} .
+          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/atoms_api_app:${{ github.sha }}
+
+      - name: Build and push Nginx Docker image
+        run: |
+          docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/atoms_api_app_nginx:${{ github.sha }} .
+          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/atoms_api_app_nginx:${{ github.sha }}
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_KEY }}
+
+      - name: Deploy to server
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
+          cd /var/www/AtomsApi
+          export IMAGE_TAG=${{ github.sha }}
+          export DOCKER_HUB_USERNAME=${{ secrets.DOCKER_HUB_USERNAME }}
+          sudo docker-compose -f docker-compose.ci.yml pull
+          sudo docker-compose -f docker-compose.ci.yml down
+          sudo docker-compose -f docker-compose.ci.yml up -d
+          sudo docker image prune -f
+          EOF
