@@ -15,6 +15,7 @@
 - djangorestframework_simplejwt 5.4.0
 - drf-yasg 1.21.8
 - flake8 7.1.1
+- gunicorn==23.0.0
 - ipython 8.32.0
 - pillow 11.1.0
 - psycopg2-binary 2.9.10
@@ -22,76 +23,88 @@
 - redis 5.2.1
 - requests 2.32.3
 
-## Установка
-1. Клонируйте репозиторий:
-   ```shell
-   git clone git@github.com:ZorinVS/AtomsAPI.git
+## Локальный запуск
+1. Клонирование репозитория
+    ```shell
+   git clone https://github.com/ZorinVS/AtomsAPI.git
+   cd AtomsAPI
+   git checkout feature/feature2
    ```
-2. Установите зависимости:
+2. Создание `.env` файла из `.env.sample`
+   - Копируйте файл
+      ```shell
+     cp .env.sample .env
+     ```
+   - Заполните файл данными
+        ```shell
+     nano .env
+     ```
+3. Запуск контейнеров
+    ```shell
+   docker-compose up -d --build
+   ```
+   Приложение будет доступно по адресу http://localhost.
+
+## CI/CD
+
+Проект настроен на автоматическое тестирование, сборку Docker-образов и деплой через GitHub Actions.
+
+#### Workflow включает этапы:
+
+1. Линтинг кода с использованием flake8
+2. Запуск тестов (SQLite)
+3. Сборка Docker-образов и публикация их на Docker Hub
+4. Деплой на удаленный сервер
+
+#### Настройка GitHub Secrets
+
+В репозитории необходимо добавить следующие секреты:
+
+- `DOCKER_HUB_USERNAME` — имя пользователя Docker Hub
+- `DOCKER_HUB_ACCESS_TOKEN` — токен доступа Docker Hub
+- `SSH_USER` — пользователь для SSH-подключения
+- `SERVER_IP` — IP-адрес сервера
+- `SSH_KEY` — приватный ключ для SSH-подключения
+- `SECRET_KEY` — секретный ключ Django
+
+## Настройка сервера
+
+1. Установите Docker: [инструкция с официального сайта](https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository)
+
+2. Установите Docker Compose:
+    ```shell
+   sudo apt install docker-compose
+   ```
+3. Настройте файрвол:
+    ```shell
+   sudo ufw enable
+   sudo ufw allow 22/tcp
+   sudo ufw allow 80/tcp
+   sudo ufw allow 443/tcp
+   ```
+4. Установите Git:
+    ```shell
+   sudo apt install git
+   ```
+5. Клонируйте репозиторий с GitHub:
+    ```shell
+   sudo mkdir -p var/www
+   cd var/www/
+   git clone https://github.com/ZorinVS/AtomsAPI.git
+   ```
+6. Создайте файл `.env`:
    ```shell
-   pip3 install -r requirements.txt
+   cd AtomsAPI
+   git checkout feature/feature2
+   sudo cp .env.sample .env
+   sudo nano .env
+   ```
+7. Запуск контейнеров
+    ```shell
+   docker-compose up -d --build
    ```
 
-## Подключение БД
-1. Создайте БД
-2. Создайте файл `.env` из файла `.env.sample`
-
-## Применение миграций
-```shell
-python manage.py migrate
+## Адрес развернутого приложения
+```plain
+http://89.169.173.116
 ```
-
-## Наполнение проекта данными
-```shell
-python3 manage.py fill_project
-```
-
-## Запуск
-1. Запустите сервер Django:
-   ```shell
-   python3 manage.py runserver
-   ```
-2. Запустите брокер Redis:
-   ```shell
-   redis-server
-   ```
-3. Запустите Celery worker с планировщиком Celery beat:
-   ```shell
-   celery -A config worker --beat --scheduler django --loglevel=info
-   ```
-
-## Тестирование
-Создание текстового отчёта:
-```shell
-coverage run --source='.' --omit='*/migrations/*','*/management/*','*/__init__.py' manage.py test && coverage report
-```
-#### Результат запуска тестов
-| Name                     | Stmts | Miss | Cover |
-|--------------------------|------:|-----:|------:|
-| config/asgi.py           |     4 |    4 |    0% |
-| config/celery.py         |     7 |    0 |  100% |
-| config/settings.py       |    38 |    0 |  100% |
-| config/urls.py           |    11 |    1 |   91% |
-| config/wsgi.py           |     4 |    4 |    0% |
-| habits/admin.py          |     6 |    0 |  100% |
-| habits/apps.py           |     4 |    0 |  100% |
-| habits/models.py         |    23 |    2 |   91% |
-| habits/paginators.py     |     5 |    0 |  100% |
-| habits/serializers.py    |    12 |    0 |  100% |
-| habits/services.py       |     8 |    6 |   25% |
-| habits/tests.py          |   103 |    0 |  100% |
-| habits/urls.py           |     7 |    0 |  100% |
-| habits/validators.py     |    18 |    0 |  100% |
-| habits/views.py          |    31 |    3 |   90% |
-| manage.py                |    11 |    2 |   82% |
-| users/admin.py           |     6 |    0 |  100% |
-| users/apps.py            |     4 |    0 |  100% |
-| users/models.py          |    33 |    9 |   73% |
-| users/permissions.py     |    11 |    0 |  100% |
-| users/serializers.py     |    19 |    1 |   95% |
-| users/services.py        |    25 |   25 |    0% |
-| users/tasks.py           |    12 |   12 |    0% |
-| users/tests.py           |    29 |    0 |  100% |
-| users/urls.py            |     6 |    0 |  100% |
-| users/views.py           |    11 |    0 |  100% |
-| **TOTAL**                |   448 |   69 |   85% |
